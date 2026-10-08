@@ -17,13 +17,6 @@ mongoose.connect(process.env.MONGO_URI)
         console.log("MongoDB connection error:" ,error);
     })
 
-let students = [{
-    id: 1,
-    name: "Juan Dela Cruz",
-    course: "BSIT",
-    age: 20,
-}];
-
 app.get("/",(req,res)=>{
     res.send("Server is Running");
 });
@@ -33,6 +26,18 @@ app.get("/students", async (req,res)=>{
     
     res.json(students);
 });
+
+app.post("/students", async (req,res)=>{
+    const {name, age, course} = req.body;
+    const student = new Student({
+        name, 
+        age,
+        course
+    });
+    await student.save();
+    console.log("saved data", student);
+    res.status(201).json(student);
+})
 
 app.listen(5000, () =>{
     console.log("Server running on port 5000");
